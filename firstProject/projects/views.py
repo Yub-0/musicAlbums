@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import permissions, viewsets, status
 
 from projects.models import Album, Track
-from projects.serializers import AlbumSerializer, TrackSerializer
+from projects.serializers import AlbumSerializer, TrackSerializer, AlbumEditSerializer
 
 
 class ListAlbumViewSet(viewsets.ViewSet):
@@ -81,3 +81,39 @@ class EditTrack(viewsets.ViewSet):
         track = self.get_object(pk)
         track.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class EditAlbum(viewsets.ViewSet):
+    def get_object(self, pk):
+        try:
+            return Album.objects.get(pk=pk)
+        except Album.DoesNotExist:
+            raise Http404
+
+    def update(self, request, pk):
+        album = self.get_object(pk)
+        serializer = AlbumEditSerializer(album, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk, format=None):
+        album = self.get_object(pk)
+        album.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # def update(self, instance, validated_data):
+    #     contacts_data = validated_data.pop('contacts')
+    #
+    #     instance.name = validated_data.get('name', instance.name)
+    #     instance.save()
+    #
+    #     # many contacts
+    #     for album_data in contacts_data:
+    #         contact = Album.objects.get(pk=contact_data['id'])  # this will crash if the id is invalid though
+    #         contact.name = contact_data.get('name', contact.name)
+    #         contact.last_name = contact_data.get('last_name', contact.last_name)
+    #         contact.save()
+    #
+    #     return instance
