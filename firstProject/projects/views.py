@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import JSONParser
@@ -37,15 +37,6 @@ class AddAlbumViewSet(viewsets.ViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # def create(self, request, *args, **kwargs):
-    #
-    #     serializer = AlbumSerializer(data=request.data)
-    #     print("here hello")
-    #     if serializer.is_valid(raise_exception=True):
-    #         serializer.save(serializer)
-    #         return JsonResponse(serializer.data, status=201)
-    #     return JsonResponse(serializer.errors, status=400)
-
 
 class AddTrackViewSet(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
@@ -70,3 +61,23 @@ class ListSpecificTrack(viewsets.ViewSet):
         serializer = TrackSerializer(track)
         return Response(serializer.data)
 
+
+class EditTrack(viewsets.ViewSet):
+    def get_object(self, pk):
+        try:
+            return Track.objects.get(pk=pk)
+        except Track.DoesNotExist:
+            raise Http404
+
+    def update(self, request, pk):
+        track = self.get_object(pk)
+        serializer = TrackSerializer(track, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk, format=None):
+        track = self.get_object(pk)
+        track.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
