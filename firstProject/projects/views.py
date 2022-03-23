@@ -102,18 +102,3 @@ class EditAlbum(viewsets.ViewSet):
         album = self.get_object(pk)
         album.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    # def update(self, instance, validated_data):
-    #     contacts_data = validated_data.pop('contacts')
-    #
-    #     instance.name = validated_data.get('name', instance.name)
-    #     instance.save()
-    #
-    #     # many contacts
-    #     for album_data in contacts_data:
-    #         contact = Album.objects.get(pk=contact_data['id'])  # this will crash if the id is invalid though
-    #         contact.name = contact_data.get('name', contact.name)
-    #         contact.last_name = contact_data.get('last_name', contact.last_name)
-    #         contact.save()
-    #
-    #     return instance
