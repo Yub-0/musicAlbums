@@ -11,10 +11,6 @@ from projects.serializers import AlbumSerializer, TrackSerializer, AlbumEditSeri
 
 class ListAlbumViewSet(viewsets.ViewSet):
 
-    # queryset = Album.objects.all()
-    # serializer_class = AlbumSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-    #                       IsOwnerOrReadOnly]
     def list(self, request):
         queryset = Album.objects.all()
         serializer = AlbumSerializer(queryset, many=True)

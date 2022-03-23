@@ -11,7 +11,7 @@ class TrackSerializer(serializers.ModelSerializer):
 
 
 class AlbumSerializer(serializers.ModelSerializer):
-    tracks = TrackSerializer(many=True)
+    tracks = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Album

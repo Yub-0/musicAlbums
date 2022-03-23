@@ -22,13 +22,6 @@ track_list_specific = ListSpecificTrack.as_view({
 track_add = AddTrackViewSet.as_view({
     'post': 'create'
 })
-# album_detail = LAlbumViewSet.as_view({
-#     'get': 'retrieve',
-#     'put': 'update',
-#     'patch': 'partial_update',
-#     'delete': 'destroy'
-# })
-
 track_edit = EditTrack.as_view({
     'put': 'update',
     # 'put': 'partial_update'
